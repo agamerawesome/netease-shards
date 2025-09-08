@@ -8,6 +8,15 @@ import { useSettings } from '../../context/Settings';
 import { DailyConfig } from '../../data/remoteConfig';
 import { ShardInfo } from '../../data/shard';
 
+// Add realm name mappings for Chinese version
+const chineseRealmNames: Record<string, { short: string; long: string }> = {
+  prairie: { short: '晨岛', long: '晨岛' },
+  forest: { short: '云野', long: '云野' },
+  valley: { short: '雨林', long: '雨林' },
+  wasteland: { short: '霞谷', long: '霞谷' },
+  vault: { short: '暮土', long: '暮土' }
+};
+
 interface ShardInfoSectionProps {
   info: ShardInfo;
   remoteDailyConfig?: DailyConfig;
@@ -20,7 +29,27 @@ export const ShardInfoSection = forwardRef<HTMLDivElement, ShardInfoSectionProps
   ref,
 ) {
   const { legTimeline } = useSettings();
-  const { t } = useTranslation(['infoSection', 'skyRealms', 'override', 'shard']);
+  const { t, i18n } = useTranslation(['infoSection', 'skyRealms', 'override', 'shard']);
+
+  // Check if we're using Chinese language
+  const isChinese = i18n.language === 'zh' || i18n.language.startsWith('zh-');
+
+  // Function to get realm name with fallback
+  const getRealmName = (realm: string, type: 'short' | 'long'): string => {
+    if (isChinese) {
+      return chineseRealmNames[realm]?.[type] || realm;
+    }
+
+    // Try to get translation, fallback to realm key if not found
+    const translationKey = `skyRealms:${realm}.${type}`;
+    try {
+      const translation = t(translationKey as any);
+      return translation !== translationKey ? translation : realm;
+    } catch {
+      return realm;
+    }
+  };
+
   const { override, overrideBy, overrideReason, memory, memoryBy } = remoteDailyConfig ?? {};
   const overrideDisclosure = useMemo(() => {
     const hasOverride = override && overrideBy && overrideReason;
@@ -29,7 +58,7 @@ export const ShardInfoSection = forwardRef<HTMLDivElement, ShardInfoSectionProps
     const reason: string = overrideReason.startsWith('!!!')
       ? 'Reason: ' + overrideReason.slice(3)
       : // @ts-ignore
-        t(`override:reason.${overrideReason}`);
+      t(`override:reason.${overrideReason}` as any);
     return (
       <small className='text-[0.8em]'>
         <p className='flex flex-row flex-wrap items-center justify-center gap-1'>
@@ -82,8 +111,8 @@ export const ShardInfoSection = forwardRef<HTMLDivElement, ShardInfoSectionProps
             bold: <span className='font-bold' />,
             realm: (
               <>
-                <span className='lg:hidden'>{t(`skyRealms:${info.realm}.short`)}</span>
-                <span className='max-lg:hidden'>{t(`skyRealms:${info.realm}.long`)}</span>
+                <span className='lg:hidden'>{getRealmName(info.realm, 'short')}</span>
+                <span className='max-lg:hidden'>{getRealmName(info.realm, 'long')}</span>
               </>
             ),
             shard: info.isRed ? (
@@ -128,10 +157,10 @@ export const ShardInfoSection = forwardRef<HTMLDivElement, ShardInfoSectionProps
                 className='tooltip tooltip-top underline decoration-dashed md:tooltip-right'
                 data-tip={t('manualMemoryCredit', { author: remoteAuthorNames?.[memoryBy!] })}
               >
-                {t('manualMemory', { memory: t(`shard:memories.${memory}`) })}
+                {t('manualMemory', { memory: t(`shard:memories.${memory}` as any) })}
               </span>
             ) : (
-              <span>{t('manualMemory', { memory: t('shard:memories.random') })}</span>
+              <span>{t('manualMemory', { memory: t('shard:memories.random' as any) })}</span>
             )}
           </>
         ) : (
@@ -147,7 +176,7 @@ export const ShardInfoSection = forwardRef<HTMLDivElement, ShardInfoSectionProps
               // Shard Ordinals
               Array.from({ length: 3 }, (_, i) => (
                 <span key={`ordinal.${i}`} className='font-semibold'>
-                  {t(`shard:ordinal.${i as 0 | 1 | 2}`)}
+                  {t(`shard:ordinal.${i as 0 | 1 | 2}` as any)}
                 </span>
               ))
             }

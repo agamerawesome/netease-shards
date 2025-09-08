@@ -9,7 +9,7 @@ import Header from './sections/App/Header';
 import ShardCarousel from './sections/Shard/Carousel';
 
 LuxonSettings.defaultLocale = 'en';
-
+LuxonSettings.defaultZone = 'Asia/Shanghai';
 function ErrorFallback({ error }: FallbackProps) {
   const feedbackUrl = useFeedbackFormUrl({
     error,

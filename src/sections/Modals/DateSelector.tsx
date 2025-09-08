@@ -53,32 +53,32 @@ export function DateSelectionModal({ hideModal }: ModalProps) {
       >
         {numCols === '7'
           ? Array.from({ length: 7 }, (_, i) => {
-              const date = calStart.plus({ days: i });
-              const shortText = date.toLocaleString({ weekday: 'short' });
-              const longText = date.toLocaleString({ weekday: 'long' });
-              return (
-                <p
-                  key={`header-${i}`}
-                  className='w-full text-center text-xs font-semibold xs:text-sm md:text-lg lg:text-xl'
-                >
-                  <span className='lg:hidden'>{shortText}</span>
-                  <span className='max-lg:hidden'>{longText}</span>
-                </p>
-              );
-            })
+            const date = calStart.plus({ days: i });
+            const shortText = date.toLocaleString({ weekday: 'short' });
+            const longText = date.toLocaleString({ weekday: 'long' });
+            return (
+              <p
+                key={`header-${i}`}
+                className='w-full text-center text-xs font-semibold xs:text-sm md:text-lg lg:text-xl'
+              >
+                <span className='lg:hidden'>{shortText}</span>
+                <span className='max-lg:hidden'>{longText}</span>
+              </p>
+            );
+          })
           : (['prairie', 'forest', 'valley', 'wasteland', 'vault'] as const).map(realm => {
-              const shortText = t(`skyRealms:${realm}.short`);
-              const longText = t(`skyRealms:${realm}.long`);
-              return (
-                <p
-                  key={`header-${realm}`}
-                  className='w-full overflow-clip text-center text-xs font-semibold xs:text-sm md:text-lg lg:text-xl'
-                >
-                  <span className='lg:hidden'>{shortText}</span>
-                  <span className='max-lg:hidden'>{longText}</span>
-                </p>
-              );
-            })}
+            const shortText = t(`skyRealms:${realm}.short`);
+            const longText = t(`skyRealms:${realm}.long`);
+            return (
+              <p
+                key={`header-${realm}`}
+                className='w-full overflow-clip text-center text-xs font-semibold xs:text-sm md:text-lg lg:text-xl'
+              >
+                <span className='lg:hidden'>{shortText}</span>
+                <span className='max-lg:hidden'>{longText}</span>
+              </p>
+            );
+          })}
         {numCols === '7' &&
           !calStart.hasSame(startOfMth, 'day') &&
           Array.from({ length: startOfMth.diff(calStart, 'days').days }, (_, i) => {
@@ -121,7 +121,7 @@ export function DateSelectionModal({ hideModal }: ModalProps) {
                 {date.toFormat('dd')}
               </p>
               <p className='w-full whitespace-nowrap text-center align-middle text-xs max-md:hidden'>
-                {hasShard ? t(`skyMaps:${map}`) : t('noShard')}
+                {hasShard ? t(`skyMaps:${map}` as any) : t('noShard')}
               </p>
             </a>
           );

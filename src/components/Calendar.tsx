@@ -32,7 +32,7 @@ export function Calendar({
     if (convertTo === 'local') {
       date = date.toLocal();
     } else if (convertTo === 'sky') {
-      date = date.setZone('America/Los_Angeles');
+      date = date.setZone('Asia/Shanghai');
     }
 
     if (date.locale !== LuxonSettings.defaultLocale) {

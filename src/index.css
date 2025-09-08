@@ -19,22 +19,25 @@ body {
 
   background-color: #242424;
   color: #fffd;
+  /* this is text color */
 }
 
 /* Light theme */
 [data-theme='light'] body {
-  --glass-background-color: rgba(64, 64, 64, 0.2);
+  --glass-background-color: rgba(145, 145, 145, 0.18);
+  /* 64, 64, 64, 0.2 */
 
   background-position: 10% center;
-  background-image: url('/backgrounds/SkyBackgroundLight.webp');
+  background-image: url('/backgrounds/SkyBackgroundLight.jpg');
 }
 
 /* Dark theme */
 [data-theme='dark'] body {
-  --glass-background-color: rgba(128, 128, 128, 0.3);
+  --glass-background-color: rgba(67, 67, 67, 0.2);
+  /* 128, 128, 128, 0.3 */
 
   background-position: 90% center;
-  background-image: url('/backgrounds/SkyBackgroundDark.webp');
+  background-image: url('/backgrounds/SkyBackgroundDark.jpg');
 }
 
 @layer components {
@@ -57,7 +60,9 @@ body {
 
   /* Hide scrollbar for IE, Edge and Firefox */
   .no-scrollbar {
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
   }
 }

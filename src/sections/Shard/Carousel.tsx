@@ -15,13 +15,16 @@ import ShardInfoSection from './Info';
 import { ShardMapInfographic, ShardDataInfographic, ShardMemoryInfographic } from './Infographic';
 import ShardProgressSection from './Progress';
 
+// Set the default timezone to Asia/Shanghai
+LuxonSettings.defaultZone = 'Asia/Shanghai';
+
 const varients = {
   enter: (direction: number) => ({ x: direction < 0 ? '-100%' : '100%', opacity: 0 }),
   center: { x: 0, opacity: 1 },
   exit: (direction: number) => ({ x: direction < 0 ? '100%' : '-100%', opacity: 0 }),
 };
 
-export default function ShardCarousel() {
+function ShardCarousel() {
   const { t, i18n } = useTranslation('shardCarousel');
   const [applyOverride, setApplyOverride] = useState(true);
 
@@ -31,7 +34,7 @@ export default function ShardCarousel() {
   useEffect(() => ((prevDate.current = date), undefined), [date]);
 
   const { showModal } = useModal();
-  const daysDiff = date.diffNow('days').days 
+  const daysDiff = date.diffNow('days').days
   const remoteConfig = useRemoteConfig(daysDiff < -2 || daysDiff > 0);
 
   const remoteDailyConfig = useMemo(
@@ -60,8 +63,8 @@ export default function ShardCarousel() {
 
   useLegacyEffect(() => {
     if (remoteConfig && remoteConfig.warning) {
-      const last = DateTime.fromSeconds(lastWarn).setZone('America/Los_Angeles');
-      const shouldWarn = !DateTime.now().setZone('America/Los_Angeles').hasSame(last, 'day');
+      const last = DateTime.fromSeconds(lastWarn).setZone('Asia/Shanghai');
+      const shouldWarn = !DateTime.now().setZone('Asia/Shanghai').hasSame(last, 'day');
       if (shouldWarn) {
         showModal({
           children: WarningModal,
@@ -164,3 +167,6 @@ export default function ShardCarousel() {
     </div>
   );
 }
+
+
+export default ShardCarousel;

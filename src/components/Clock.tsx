@@ -3,6 +3,9 @@ import { DateTime, Duration, Settings as LuxonSettings } from 'luxon';
 import { useNow } from '../context/Now';
 import { useSettings } from '../context/Settings';
 
+// Set the default timezone to Asia/Shanghai at the module level
+LuxonSettings.defaultZone = 'Asia/Shanghai';
+
 interface ClockProp {
   time?: DateTime;
   duration?: Duration;
@@ -19,7 +22,7 @@ export function StaticClock({
   time,
   duration,
   dualUnit,
-  convertTo,
+  convertTo = 'sky', // Default to Sky time (Asia/Shanghai)
   className = '',
   relFontSize = 1,
   disableMonoFont,
@@ -28,34 +31,48 @@ export function StaticClock({
 }: ClockProp) {
   const { t } = useTranslation('durationFmts');
   const { twelveHourMode } = useSettings();
+
   if (!duration && !time) throw new Error('Time component requires either time or duration prop');
   if (time && duration) throw new Error('Time component requires either time or duration prop, not both');
+
   if (time && time.locale !== LuxonSettings.defaultLocale) {
     time = time.setLocale(LuxonSettings.defaultLocale);
   }
 
-  //disableSeconds || dualUnit ? (Math.abs(duration.as('minutes')) > 90 ? 'hm' : disableSeconds ? 'm' : 'ms'  ) : 'hms'
+  // Handle timezone conversion
+  let displayTime = time;
+  if (time) {
+    if (convertTo === 'local') {
+      // Convert to user's local timezone
+      displayTime = time.toLocal();
+    } else {
+      // Ensure it's in Asia/Shanghai timezone
+      displayTime = time.setZone('Asia/Shanghai');
+    }
+  }
+
   const formattedTime = duration
     ? duration.toFormat(
-        t(
-          disableSeconds || dualUnit
-            ? Math.abs(duration.as('minutes')) > 90
-              ? 'hm'
-              : disableSeconds
-                ? 'm'
-                : 'ms'
-            : 'hms',
-        ),
-      )
-    : time?.setZone(convertTo === 'local' ? 'default' : 'America/Los_Angeles')?.toLocaleString({
-        hourCycle: twelveHourMode === 'system' ? undefined : twelveHourMode === 'true' ? 'h12' : 'h23',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: disableSeconds || dualUnit ? undefined : '2-digit',
-      });
+      t(
+        disableSeconds || dualUnit
+          ? Math.abs(duration.as('minutes')) > 90
+            ? 'hm'
+            : disableSeconds
+              ? 'm'
+              : 'ms'
+          : 'hms',
+      ),
+    )
+    : displayTime?.toLocaleString({
+      hourCycle: twelveHourMode === 'system' ? undefined : twelveHourMode === 'true' ? 'h12' : 'h23',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: disableSeconds || dualUnit ? undefined : '2-digit',
+    });
 
   className += disableMonoFont ? '' : ' font-mono';
   if (strikeThrough) className += ' line-through';
+
   return (
     <span className={className} style={relFontSize ? { fontSize: `${relFontSize}em` } : undefined}>
       {formattedTime}
@@ -71,8 +88,15 @@ type ClockNowProp = Omit<ClockProp, 'convertTo' | 'duration' | 'strikeThrough'> 
   strikeThroughPast?: boolean;
 };
 
-export function ClockNow({ time, showLocal = false, invertDiff, strikeThroughPast, ...clockParam }: ClockNowProp) {
+export function ClockNow({
+  time,
+  showLocal = false,
+  invertDiff,
+  strikeThroughPast,
+  ...clockParam
+}: ClockNowProp) {
   const { application, local } = useNow();
+
   if (time && strikeThroughPast) {
     return (
       <StaticClock
@@ -87,7 +111,7 @@ export function ClockNow({ time, showLocal = false, invertDiff, strikeThroughPas
     return <StaticClock {...clockParam} duration={duration} />;
   } else {
     const now = showLocal ? local : application;
-    return <StaticClock {...clockParam} time={now} />;
+    return <StaticClock {...clockParam} time={now} convertTo={showLocal ? 'local' : 'sky'} />;
   }
 }
 
@@ -98,11 +122,16 @@ interface CountdownProp {
 export function Countdown({ to }: CountdownProp) {
   const { application: now } = useNow();
   const { t } = useTranslation('durationUnits');
-  let duration = now.diff(to).shiftTo('hours', 'minutes', 'seconds', 'milliseconds');
+
+  // Ensure we're comparing times in the same timezone
+  const toCorrected = to.setZone('Asia/Shanghai');
+  const nowCorrected = now.setZone('Asia/Shanghai');
+
+  let duration = nowCorrected.diff(toCorrected).shiftTo('hours', 'minutes', 'seconds', 'milliseconds');
   const isNegative = duration.as('seconds') < 0;
   if (isNegative) duration = duration.negate();
-  const { hours, minutes, seconds } = duration;
 
+  const { hours, minutes, seconds } = duration;
   const days = hours > 60 ? Math.floor(hours / 24) : undefined;
 
   return (
@@ -142,7 +171,7 @@ export function CountdownParts({
   unitShort?: string;
   unitLong?: string;
 }) {
-  const valueStr = value.toString().padStart(2, '0');
+  const valueStr = Math.floor(value).toString().padStart(2, '0');
   return (
     <>
       <span className='font-mono text-[1.2em] font-bold leading-[.8em] md:text-[1.8em] md:leading-[1em]'>

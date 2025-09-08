@@ -163,17 +163,18 @@ function SkyClockFooter() {
   const { t } = useTranslation('footer');
   return (
     <OtherAppFooter
-      heading={t('inspiredBy')}
+      heading={t('originalBy')}
       app={{
-        title: 'Sky Clock',
-        description: t('skyClockDescription'),
-        link: 'https://sky-clock.netlify.app/',
-        icon: '/ext/sky-clock.webp',
-        creator: 'Chris Stead',
+        title: 'Sky Shards',
+        description: t('skyShardsDescription'),
+        link: 'https://sky-shards.pages.dev/en',
+        icon: '/icons/favicon-32x32.png',
+        creator: 'Plutoy',
       }}
     />
   );
 }
+
 
 function SkyPlannerFooter() {
   const { t } = useTranslation('footer');
@@ -190,6 +191,7 @@ function SkyPlannerFooter() {
     />
   );
 }
+
 
 function SkyEventCalFooter() {
   const { t } = useTranslation('footer');
@@ -217,20 +219,20 @@ export function Footer() {
 
   const subfooters = useMemo(() => {
     const subfooters = [
-      { key: 'app-detail', Footer: AppDetailFooter },
-      { key: 'pattern-credit', Footer: PattenCreditFooter },
+      //{ key: 'app-detail', Footer: AppDetailFooter },
+      //{ key: 'pattern-credit', Footer: PattenCreditFooter },
       { key: 'sky-clock', Footer: SkyClockFooter },
-      { key: 'sky-planner', Footer: SkyPlannerFooter },
+      //{ key: 'sky-planner', Footer: SkyPlannerFooter },
     ] as { key: string; Footer: () => JSX.Element }[];
 
-    const translators = t('translators');
+    //const translators = t('translators');
 
-    if (i18n.language !== 'en' && translators.length > 0) {
+    /*8if (i18n.language !== 'en' && translators.length > 0) {
       subfooters.splice(2, 0, { key: 'translators-credit', Footer: TranslatorsFooter });
     } else if (i18n.language === 'en') {
       subfooters.splice(2, 0, { key: 'help-translate', Footer: HelpTranslation });
       subfooters.push({ key: 'sky-event-cal', Footer: SkyEventCalFooter });
-    }
+    }*/
 
     return subfooters;
   }, [i18n.language, LuxonSettings.defaultZone.name]);
