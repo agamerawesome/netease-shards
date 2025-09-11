@@ -15,7 +15,7 @@ import { DateTime, Settings as LuxonSettings } from 'luxon';
 import useLegacyEffect from '../hooks/useLegacyEffect';
 import { languageCode } from '../i18n';
 
-const appZone = 'America/Los_Angeles';
+const appZone = 'Asia/Shanghai';
 
 const relDateMap = {
   eytd: -2,
@@ -361,7 +361,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     return { ...resolvedLocal, ...parsed };
   }, [resolvedLocal]);
 
-  useLegacyEffect(() => {}, [settings.lightMode, settings.timezone, settings.lang]);
+  useLegacyEffect(() => { }, [settings.lightMode, settings.timezone, settings.lang]);
 
   const setSettings: SetSettings = useCallback(
     (edits, setUrl = true, pushHistory = true) => {

@@ -15,16 +15,13 @@ import ShardInfoSection from './Info';
 import { ShardMapInfographic, ShardDataInfographic, ShardMemoryInfographic } from './Infographic';
 import ShardProgressSection from './Progress';
 
-// Set the default timezone to Asia/Shanghai
-LuxonSettings.defaultZone = 'Asia/Shanghai';
-
 const varients = {
   enter: (direction: number) => ({ x: direction < 0 ? '-100%' : '100%', opacity: 0 }),
   center: { x: 0, opacity: 1 },
   exit: (direction: number) => ({ x: direction < 0 ? '100%' : '-100%', opacity: 0 }),
 };
 
-function ShardCarousel() {
+export default function ShardCarousel() {
   const { t, i18n } = useTranslation('shardCarousel');
   const [applyOverride, setApplyOverride] = useState(true);
 
@@ -167,6 +164,3 @@ function ShardCarousel() {
     </div>
   );
 }
-
-
-export default ShardCarousel;

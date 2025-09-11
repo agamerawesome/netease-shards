@@ -33,6 +33,12 @@ try {
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  preview: {
+    allowedHosts: ['hf2091tfy6s.sn.mynetname.net']
+  },
+  server: {
+    allowedHosts: ['hf2091tfy6s.sn.mynetname.net']
+  },
   build: {
     rollupOptions: {
       output: {

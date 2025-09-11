@@ -10,14 +10,14 @@ import type { ShardInfo } from '../../data/shard';
 
 export function DateSelectionModal({ hideModal }: ModalProps) {
   const { t } = useTranslation(['dateSelector', 'skyRealms', 'skyMaps']);
-  const today = DateTime.local({ zone: 'America/Los_Angeles' });
+  const today = DateTime.local({ zone: 'Asia/Shanghai' });
 
   const { date: selectedDate, lang, numCols, setSettings } = useSettings();
 
   const navigateDay = useCallback((date: DateTime) => setSettings({ date }), [setSettings]);
   const [{ year, month }, setYearMonth] = useState(() => ({ year: selectedDate.year, month: selectedDate.month }));
 
-  const startOfMth = DateTime.local(year, month, 1, { zone: 'America/Los_Angeles' });
+  const startOfMth = DateTime.local(year, month, 1, { zone: 'Asia/Shanghai' });
   const endOfMth = startOfMth.endOf('month');
   const daysInMonth = startOfMth.daysInMonth!;
 

@@ -67,7 +67,7 @@ export default function Header() {
   const { t } = useTranslation(['application', 'dateSelector', 'settings']);
   const { setSettings } = useSettings();
   const { showModal } = useModal();
-  const navigateToday = () => setSettings({ date: DateTime.local({ zone: 'America/Los_Angeles' }) });
+  const navigateToday = () => setSettings({ date: DateTime.local({ zone: 'Asia/Shanghai' }) });
   const [expandMenu, setExpandMenu] = useState(false);
 
   return (
