@@ -4,23 +4,26 @@ import Calendar from '../../components/Calendar';
 import StaticClock, { Countdown } from '../../components/Clock';
 import { useNow } from '../../context/Now';
 import { ShardInfo } from '../../data/shard';
+import { getShardInfo } from '../../data/shard';
 
 export function ShardCountdownSection({ info }: { info: ShardInfo }) {
   const { t } = useTranslation(['countdownSection', 'durationFmts']);
   const { application: now } = useNow();
-  const { occurrences } = info;
+  const currentInfo = getShardInfo(now);
+  const { occurrences } = currentInfo;
 
   // Convert all occurrences to Asia/Shanghai timezone
-  const occurrencesShanghai = occurrences.map(occurrence => ({
+  /*
+  const occurrences = occurrences.map(occurrence => ({
     ...occurrence,
     land: occurrence.land.setZone('Asia/Shanghai'),
     end: occurrence.end.setZone('Asia/Shanghai')
-  }));
+  }));*/
 
-  const upcommingIndex = occurrencesShanghai.findIndex(({ end }) => end > now);
-  const upcomming = upcommingIndex >= 0 ? occurrencesShanghai[upcommingIndex] : undefined;
+  const upcommingIndex = occurrences.findIndex(({ end }) => end > now);
+  const upcomming = upcommingIndex >= 0 ? occurrences[upcommingIndex] : undefined;
   const landed = upcomming && upcomming.land < now;
-  const countdownTo = upcomming && landed ? occurrencesShanghai[upcommingIndex]?.end : upcomming?.land;
+  const countdownTo = upcomming && landed ? occurrences[upcommingIndex]?.end : upcomming?.land;
 
   return (
     <section className='glass grid min-w-[12rem] auto-cols-auto auto-rows-auto place-items-center gap-x-4 short:min-w-[24rem] short:items-end tall:md:min-w-[16rem]'>

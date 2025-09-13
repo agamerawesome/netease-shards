@@ -2,60 +2,72 @@ import { DateTime, Duration } from 'luxon';
 import type { Translation } from '../i18n';
 import type { Override } from './remoteConfig';
 
-const landOffset = Duration.fromObject({ minutes: 8, seconds: 40 }); // after start
-const endOffset = Duration.fromObject({ hours: 1 }); // Changed from 4 hours to 1 hour for Light-yu
-
-const blackShardInterval = Duration.fromObject({ hours: 8 });
-const redShardInterval = Duration.fromObject({ hours: 6 });
+const landOffset = Duration.fromObject({ minutes: 8, seconds: 40 });
+const eruptionDuration = Duration.fromObject({ minutes: 52 }); // Shards last 52 minutes
 
 const realms = ['prairie', 'forest', 'valley', 'wasteland', 'vault'] as const;
 type Areas = keyof Translation['skyMaps'];
 
 interface ShardConfig {
-  noShardWkDay: number[];
-  offset: Duration;
-  interval: Duration;
-  maps: [Areas, Areas, Areas, Areas, Areas];
-  defRewardAC?: number;
+  hasShard: boolean;
+  isRed: boolean;
+  times: string[]; // Array of start times in "HH:mm" format
 }
 
-// Light-yu specific configuration
-const shardsInfo = [
-  // First half of month (1st-15th) configuration
-  {
-    noShardWkDay: [1, 3, 4, 5], // Monday, Wednesday, Thursday, Friday
-    interval: blackShardInterval,
-    offset: Duration.fromObject({ hours: 2, minutes: 10 }),
-    maps: ['prairie.village', 'forest.boneyard', 'valley.rink', 'wasteland.battlefield', 'vault.starlight'],
-  },
-  {
-    noShardWkDay: [1, 3, 4, 5], // Monday, Wednesday, Thursday, Friday
-    interval: redShardInterval,
-    offset: Duration.fromObject({ hours: 7, minutes: 40 }),
-    maps: ['prairie.cave', 'forest.end', 'valley.dreams', 'wasteland.graveyard', 'vault.jelly'],
-    defRewardAC: 2,
-  },
-  // Second half of month (16th-31st) configuration
-  {
-    noShardWkDay: [1, 2, 4, 6], // Monday, Tuesday, Thursday, Saturday
-    interval: blackShardInterval,
-    offset: Duration.fromObject({ hours: 3, minutes: 30 }),
-    maps: ['prairie.island', 'forest.sunny', 'valley.hermit', 'wasteland.ark', 'vault.jelly'],
-  },
-  {
-    noShardWkDay: [1, 2, 4, 6], // Monday, Tuesday, Thursday, Saturday
-    interval: redShardInterval,
-    offset: Duration.fromObject({ hours: 2, minutes: 20 }),
-    maps: ['prairie.bird', 'forest.tree', 'valley.dreams', 'wasteland.crab', 'vault.jelly'],
-    defRewardAC: 2.5,
-  },
-] satisfies ShardConfig[];
+// NetEase specific configuration
+const shardSchedule: Record<number, (dayOfMonth: number) => ShardConfig> = {
+  // Monday
+  1: (dayOfMonth) => ({
+    hasShard: false,
+    isRed: false,
+    times: [],
+  }),
+  // Tuesday (Black shards in 1st-15th)
+  2: (dayOfMonth) => ({
+    hasShard: dayOfMonth <= 15,
+    isRed: false,
+    times: ['09:08', '14:08', '19:08'],
+  }),
+  // Wednesday (Black shards in 16th-end)
+  3: (dayOfMonth) => ({
+    hasShard: dayOfMonth > 15,
+    isRed: false,
+    times: ['09:08', '15:08', '21:08'],
+  }),
+  // Thursday
+  4: (dayOfMonth) => ({
+    hasShard: false,
+    isRed: false,
+    times: [],
+  }),
+  // Friday (Red shards in 16th-end)
+  5: (dayOfMonth) => ({
+    hasShard: dayOfMonth > 15,
+    isRed: true,
+    times: ['11:08', '14:08', '23:08'],
+  }),
+  // Saturday (Red shards in 1st-15th)
+  6: (dayOfMonth) => ({
+    hasShard: dayOfMonth <= 15,
+    isRed: true,
+    times: ['10:08', '14:08', '22:08'],
+  }),
+  // Sunday (Red shards all month)
+  7: (dayOfMonth) => ({
+    hasShard: true,
+    isRed: true,
+    times: ['07:08', '13:08', '19:08'],
+  }),
+};
 
+// Updated reward values - set to 2 candles instead of 1.5
 const overrideRewardAC: Record<string, number> = {
-  'forest.end': 2.5,
-  'valley.dreams': 2.5,
-  'forest.tree': 3.5,
-  'vault.jelly': 3.5,
+  'prairie.cave': 2, // Daylight Prairie Cave
+  'forest.end': 2,
+  'valley.dreams': 2,
+  'forest.tree': 2,
+  'vault.jelly': 2,
+  // Add other locations as needed, all set to 2 candles
 };
 
 // Used to validate variation input, not listed = 1
@@ -64,7 +76,7 @@ export const numMapVarients = {
   'prairie.village': 3,
   'prairie.bird': 2,
   'prairie.island': 3,
-  'prairie.cave': 2,
+  'prairie.cave': 2, // Daylight Prairie Cave
   'forest.brook': 2,
   'forest.boneyard': 2,
   'forest.end': 2,
@@ -82,54 +94,44 @@ export const numMapVarients = {
   'vault.jelly': 2,
 };
 
-// Function to get the first shard day of the month based on the 1st's weekday
-function getFirstShardDay(firstOfMonth: DateTime): { realmIndex: number; mapIndex: number } {
-  const weekday = firstOfMonth.weekday; // 1 = Monday, 7 = Sunday
+// Custom realm rotation for NetEase version
+function getNetEaseRealmRotation(date: DateTime): { realmIndex: number; map: Areas } {
+  const dayOfMonth = date.day;
+  const month = date.month;
+  const year = date.year;
 
-  switch (weekday) {
-    case 1: // Monday - No shard, next is Tuesday in Starlight Desert (Vault)
-      return { realmIndex: 4, mapIndex: 0 }; // Vault, Starlight Desert
-    case 2: // Tuesday - Broken Temple (Wasteland)
-      return { realmIndex: 3, mapIndex: 0 }; // Wasteland, Broken Temple
-    case 3: // Wednesday - No shard, next is Saturday in Forest End
-      return { realmIndex: 1, mapIndex: 2 }; // Forest, Forest End
-    case 4: // Thursday - No shard, next is Saturday in Prairie Caves
-      return { realmIndex: 0, mapIndex: 4 }; // Prairie, Cave
-    case 5: // Friday - No shard, next is Saturday in Jellyfish Cove
-      return { realmIndex: 4, mapIndex: 1 }; // Vault, Jellyfish Cove
-    case 6: // Saturday - Graveyard (Wasteland)
-      return { realmIndex: 3, mapIndex: 2 }; // Wasteland, Graveyard
-    case 7: // Sunday - Forgotten Ark (Wasteland)
-      return { realmIndex: 3, mapIndex: 4 }; // Wasteland, Forgotten Ark
-    default:
-      return { realmIndex: 3, mapIndex: 0 }; // Default to Wasteland, Broken Temple
+  // Special case for September 13th, 2025 - Daylight Prairie Cave
+  if (year === 2025 && month === 9 && dayOfMonth === 13) {
+    return { realmIndex: 0, map: 'prairie.cave' };
   }
+
+  // Calculate a predictable rotation based on day of year
+  // This ensures consistent rotation across months
+  const dayOfYear = date.ordinal;
+  const rotationIndex = dayOfYear % 5; // 5 realms to rotate through
+
+  // Define the rotation order
+  const rotationOrder: { realmIndex: number; map: Areas }[] = [
+    { realmIndex: 0, map: 'prairie.cave' },     // Prairie - Cave
+    { realmIndex: 1, map: 'forest.end' },       // Forest - End
+    { realmIndex: 2, map: 'valley.dreams' },    // Valley - Dreams
+    { realmIndex: 3, map: 'wasteland.graveyard' }, // Wasteland - Graveyard
+    { realmIndex: 4, map: 'vault.jelly' },      // Vault - Jellyfish Cove
+  ];
+
+  return rotationOrder[rotationIndex];
 }
 
 export function getShardInfo(date: DateTime, override?: Override) {
   const today = date.setZone('Asia/Shanghai').startOf('day');
   const [dayOfMth, dayOfWk] = [today.day, today.weekday];
 
-  // Determine if it's first or second half of the month
-  const isFirstHalf = dayOfMth <= 15;
-
-  // Select the appropriate config based on half of month and day type
-  let configIndex: number;
-  if (isFirstHalf) {
-    // First half: Black on Tuesday, Red on Saturday/Sunday
-    if (dayOfWk === 2) configIndex = 0; // Tuesday - Black
-    else if (dayOfWk === 6 || dayOfWk === 7) configIndex = 1; // Saturday/Sunday - Red
-    else configIndex = -1; // No shard
-  } else {
-    // Second half: Black on Wednesday, Red on Friday/Sunday
-    if (dayOfWk === 3) configIndex = 2; // Wednesday - Black
-    else if (dayOfWk === 5 || dayOfWk === 7) configIndex = 3; // Friday/Sunday - Red
-    else configIndex = -1; // No shard
-  }
+  // Get the shard configuration for this day
+  const shardConfig = shardSchedule[dayOfWk](dayOfMth);
 
   // Handle overrides
-  const isRed = override?.isRed ?? (configIndex === 1 || configIndex === 3);
-  const hasShard = override?.hasShard ?? (configIndex !== -1);
+  const isRed = override?.isRed ?? shardConfig.isRed;
+  const hasShard = override?.hasShard ?? shardConfig.hasShard;
 
   if (!hasShard) {
     return {
@@ -148,48 +150,18 @@ export function getShardInfo(date: DateTime, override?: Override) {
     };
   }
 
-  const { interval, offset, maps, defRewardAC } = shardsInfo[configIndex];
-
-  // Calculate realm index based on the first of the month
-  const firstOfMonth = today.startOf('month');
-  const { realmIndex: firstRealmIndex, mapIndex: firstMapIndex } = getFirstShardDay(firstOfMonth);
-
-  // Calculate the number of shard days from the first shard day to today
-  let shardDaysCount = 0;
-  let currentDay = firstOfMonth;
-
-  while (currentDay <= today) {
-    const currentDayOfMth = currentDay.day;
-    const currentDayOfWk = currentDay.weekday;
-    const isCurrentFirstHalf = currentDayOfMth <= 15;
-
-    const hasShardToday =
-      (isCurrentFirstHalf && (currentDayOfWk === 2 || currentDayOfWk === 6 || currentDayOfWk === 7)) ||
-      (!isCurrentFirstHalf && (currentDayOfWk === 3 || currentDayOfWk === 5 || currentDayOfWk === 7));
-
-    if (hasShardToday) {
-      shardDaysCount++;
-    }
-
-    currentDay = currentDay.plus({ days: 1 });
-  }
-
-  // Calculate realm and map indices
-  const realmIdx = override?.realm ?? (firstRealmIndex + shardDaysCount - 1) % 5;
-  const map = override?.map ?? maps[realmIdx];
-  const rewardAC = isRed ? overrideRewardAC[map] ?? defRewardAC : undefined;
+  // Use NetEase-specific realm rotation
+  const { realmIndex, map } = getNetEaseRealmRotation(today);
+  const rewardAC = isRed ? overrideRewardAC[map] ?? 2 : undefined; // Default to 2 candles
   const numVarient = numMapVarients[map as keyof typeof numMapVarients] ?? 1;
 
-  let firstStart = today.plus(offset);
-  // Detect timezone changes (DST)
-  if (dayOfWk === 7 && today.isInDST !== firstStart.isInDST) {
-    firstStart = firstStart.plus({ hours: firstStart.isInDST ? -1 : 1 });
-  }
-
-  const occurrences = Array.from({ length: 3 }, (_, i) => {
-    const start = firstStart.plus(interval.mapUnits(x => x * i));
+  // Create occurrences based on the fixed times
+  const occurrences = shardConfig.times.map(timeStr => {
+    const [hours, minutes] = timeStr.split(':').map(Number);
+    const start = today.set({ hour: hours, minute: minutes, second: 0, millisecond: 0 });
     const land = start.plus(landOffset);
-    const end = start.plus(endOffset); // Now only 1 hour after start
+    const end = start.plus(eruptionDuration);
+
     return { start, land, end };
   });
 
@@ -197,10 +169,10 @@ export function getShardInfo(date: DateTime, override?: Override) {
     date,
     isRed,
     hasShard,
-    offset,
-    interval,
-    lastEnd: occurrences[2].end,
-    realm: realms[realmIdx],
+    offset: Duration.fromObject({ hours: 0 }), // Not used with fixed times
+    interval: Duration.fromObject({ hours: 0 }), // Not used with fixed times
+    lastEnd: occurrences[occurrences.length - 1].end,
+    realm: realms[realmIndex],
     map,
     numVarient,
     rewardAC,
@@ -219,9 +191,26 @@ export function findNextShard(from: DateTime, opts: findShardOptions = {}): Shar
   const info = getShardInfo(from);
   const { hasShard, isRed, lastEnd } = info;
   const { only } = opts;
+
   if (hasShard && from < lastEnd && (!only || (only === 'red') === isRed)) {
     return info;
   } else {
     return findNextShard(from.plus({ days: 1 }), { only });
   }
+}
+
+// Function to get predicted shards for the next few days
+export function getPredictedShards(from: DateTime, count: number = 7): ShardInfo[] {
+  const predictions: ShardInfo[] = [];
+  let currentDate = from;
+
+  for (let i = 0; i < count; i++) {
+    const shardInfo = getShardInfo(currentDate);
+    if (shardInfo.hasShard) {
+      predictions.push(shardInfo);
+    }
+    currentDate = currentDate.plus({ days: 1 });
+  }
+
+  return predictions;
 }

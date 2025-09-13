@@ -7,9 +7,11 @@ import useFeedbackFormUrl from './hooks/useFeedbackFom';
 import Footer from './sections/App/Footer';
 import Header from './sections/App/Header';
 import ShardCarousel from './sections/Shard/Carousel';
+import EventsBar from './sections/Events/Bar';
 
 LuxonSettings.defaultLocale = 'en';
 LuxonSettings.defaultZone = 'Asia/Shanghai';
+
 function ErrorFallback({ error }: FallbackProps) {
   const feedbackUrl = useFeedbackFormUrl({
     error,
@@ -30,7 +32,7 @@ function ErrorFallback({ error }: FallbackProps) {
           <span className='text-sm font-bold '>Submit bug report</span>
         </a>
         <a
-          href='https://v3.sky-shards.pages.dev'
+          href='about:blank'
           target='_blank'
           rel='noreferrer'
           className='whitespace-nowrap rounded-xl bg-purple-700 px-2 pb-1 pt-0.5 text-white'
@@ -53,6 +55,7 @@ function App() {
           <ModalProvider>
             <div className='absolute inset-1 flex flex-col flex-nowrap overflow-hidden'>
               <Header />
+              <EventsBar /> {/* Add the events bar here */}
               <ShardCarousel />
               <Footer />
             </div>
