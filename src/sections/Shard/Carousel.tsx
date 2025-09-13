@@ -12,8 +12,9 @@ import useLegacyEffect from '../../hooks/useLegacyEffect';
 import WarningModal from '../Modals/Warning';
 import { ShardCountdownSection } from './Countdown';
 import ShardInfoSection from './Info';
-import { ShardMapInfographic, ShardDataInfographic, ShardMemoryInfographic } from './Infographic';
+//import { ShardMapInfographic, ShardDataInfographic, ShardMemoryInfographic } from './Infographic';
 import ShardProgressSection from './Progress';
+import EventsBar from '../Events/Bar';
 
 const varients = {
   enter: (direction: number) => ({ x: direction < 0 ? '-100%' : '100%', opacity: 0 }),
@@ -128,13 +129,7 @@ export default function ShardCarousel() {
           </div>
           {info.hasShard && (
             <div className='flex flex-row flex-wrap items-start justify-center gap-6'>
-              <ShardMemoryInfographic remoteDailyConfig={remoteDailyConfig} authorNames={remoteConfig?.authorNames} />
-              <ShardMapInfographic
-                info={info}
-                remoteDailyConfig={remoteDailyConfig}
-                authorNames={remoteConfig?.authorNames}
-              />
-              <ShardDataInfographic info={info} />
+              <EventsBar />
             </div>
           )}
         </motion.main>

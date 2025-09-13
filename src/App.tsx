@@ -55,7 +55,7 @@ function App() {
           <ModalProvider>
             <div className='absolute inset-1 flex flex-col flex-nowrap overflow-hidden'>
               <Header />
-              <EventsBar /> {/* Add the events bar here */}
+
               <ShardCarousel />
               <Footer />
             </div>

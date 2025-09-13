@@ -54,7 +54,7 @@ const shortcutsIcon = [
 const manifest: Partial<ManifestOptions> = {
   name: 'Sky Shards',
   short_name: 'Sky Shards',
-  description: `Shard Eruption in the game 'Sky: Children of the Light'`,
+  description: `Shard Eruption in the game '光·遇 (Light·encounter)'.`,
   theme_color: '#8a76b1',
   background_color: '#8a76b1',
   display: 'standalone',

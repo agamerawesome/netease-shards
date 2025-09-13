@@ -95,31 +95,79 @@ export const numMapVarients = {
 };
 
 // Custom realm rotation for NetEase version
-function getNetEaseRealmRotation(date: DateTime): { realmIndex: number; map: Areas } {
-  const dayOfMonth = date.day;
-  const month = date.month;
-  const year = date.year;
+// Improved prediction algorithm for Chinese version
+// Data-driven approach with fallback predictions
+interface ConfirmedObservation {
+  date: string; // YYYY-MM-DD format
+  realmIndex: number;
+  map: Areas;
+}
 
-  // Special case for September 13th, 2025 - Daylight Prairie Cave
-  if (year === 2025 && month === 9 && dayOfMonth === 13) {
-    return { realmIndex: 0, map: 'prairie.cave' };
+// Store your confirmed observations here
+const confirmedObservations: ConfirmedObservation[] = [
+  { date: '2025-09-13', realmIndex: 0, map: 'prairie.cave' },
+  { date: '2025-09-14', realmIndex: 1, map: 'forest.sunny' },
+  // Add more as you confirm them
+];
+
+function getNetEaseRealmRotation(date: DateTime): { realmIndex: number; map: Areas } {
+  const dateStr = date.toFormat('yyyy-MM-dd');
+
+  // Check if we have a confirmed observation for this date
+  const observation = confirmedObservations.find(obs => obs.date === dateStr);
+  if (observation) {
+    return { realmIndex: observation.realmIndex, map: observation.map };
   }
 
-  // Calculate a predictable rotation based on day of year
-  // This ensures consistent rotation across months
-  const dayOfYear = date.ordinal;
-  const rotationIndex = dayOfYear % 5; // 5 realms to rotate through
+  // If no confirmed observation, use prediction algorithm
+  return predictRealm(date);
+}
 
-  // Define the rotation order
-  const rotationOrder: { realmIndex: number; map: Areas }[] = [
-    { realmIndex: 0, map: 'prairie.cave' },     // Prairie - Cave
-    { realmIndex: 1, map: 'forest.end' },       // Forest - End
-    { realmIndex: 2, map: 'valley.dreams' },    // Valley - Dreams
-    { realmIndex: 3, map: 'wasteland.graveyard' }, // Wasteland - Graveyard
-    { realmIndex: 4, map: 'vault.jelly' },      // Vault - Jellyfish Cove
-  ];
+function predictRealm(date: DateTime): { realmIndex: number; map: Areas } {
+  // Analyze patterns from confirmed observations to make better predictions
+  if (confirmedObservations.length >= 2) {
+    // Simple pattern detection - you can make this more sophisticated
+    const lastObservation = confirmedObservations[confirmedObservations.length - 1];
+    const secondLastObservation = confirmedObservations[confirmedObservations.length - 2];
 
-  return rotationOrder[rotationIndex];
+    // Check if there's a pattern in realm progression
+    const realmProgress = (lastObservation.realmIndex - secondLastObservation.realmIndex + 5) % 5;
+
+    const realmsList: Areas[] = [
+      'prairie.cave', 'prairie.island', 'prairie.village',
+      'forest.sunny', 'forest.end', 'forest.boneyard',
+      'valley.dreams', 'valley.rink', 'valley.hermit',
+      'wasteland.graveyard', 'wasteland.battlefield', 'wasteland.crab',
+      'vault.starlight', 'vault.jelly'
+    ];
+
+    // Predict next in sequence
+    const predictedRealmIndex = (lastObservation.realmIndex + realmProgress) % 5;
+    const realmMaps = realmsList.filter(map => map.startsWith(realms[predictedRealmIndex] + '.'));
+
+    // Select a map from this realm (you might want to make this more sophisticated)
+    const map = realmMaps[Math.floor(Math.random() * realmMaps.length)] as Areas;
+
+    return { realmIndex: predictedRealmIndex, map };
+  }
+
+  // Fallback if not enough data
+  return { realmIndex: 0, map: 'prairie.butterfly' };
+}
+
+// Function to add new observations
+export function addObservation(date: DateTime, realmIndex: number, map: Areas) {
+  const dateStr = date.toFormat('yyyy-MM-dd');
+  const existingIndex = confirmedObservations.findIndex(obs => obs.date === dateStr);
+
+  if (existingIndex >= 0) {
+    confirmedObservations[existingIndex] = { date: dateStr, realmIndex, map };
+  } else {
+    confirmedObservations.push({ date: dateStr, realmIndex, map });
+  }
+
+  // Sort by date
+  confirmedObservations.sort((a, b) => a.date.localeCompare(b.date));
 }
 
 export function getShardInfo(date: DateTime, override?: Override) {
