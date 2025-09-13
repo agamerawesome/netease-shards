@@ -1,10 +1,10 @@
 # Sky Shard Web Application
 
-[Open App](https://sky-shards.pages.dev)
+[Open App](http://hf2091tfy6s.sn.mynetname.net:2088/en)
 
 ## Description
 
-Compute the color, time and location of [Shard Eruptions](https://sky-children-of-the-light.fandom.com/wiki/Shard_Eruptions) in the Game "Sky: Children of the Light".
+Compute the color, time and location of [Shard Eruptions](https://sky-children-of-the-light.fandom.com/wiki/Shard_Eruptions) in the Game "光·遇 (Light·encounter)".
 
 Shard is computed as described in [Shard Prediction Rule](./ShardPredictionRule.md) and calculated [here](./src/data/shard.ts)
 
