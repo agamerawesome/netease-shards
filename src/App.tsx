@@ -7,7 +7,6 @@ import useFeedbackFormUrl from './hooks/useFeedbackFom';
 import Footer from './sections/App/Footer';
 import Header from './sections/App/Header';
 import ShardCarousel from './sections/Shard/Carousel';
-import EventsBar from './sections/Events/Bar';
 
 LuxonSettings.defaultLocale = 'en';
 LuxonSettings.defaultZone = 'Asia/Shanghai';
@@ -55,7 +54,6 @@ function App() {
           <ModalProvider>
             <div className='absolute inset-1 flex flex-col flex-nowrap overflow-hidden'>
               <Header />
-
               <ShardCarousel />
               <Footer />
             </div>

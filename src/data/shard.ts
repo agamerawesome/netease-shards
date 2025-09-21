@@ -2,7 +2,7 @@ import { DateTime, Duration } from 'luxon';
 import type { Translation } from '../i18n';
 import type { Override } from './remoteConfig';
 
-const landOffset = Duration.fromObject({ minutes: 8, seconds: 40 });
+const landOffset = Duration.fromObject({ minutes: 0, seconds: 0 });
 const eruptionDuration = Duration.fromObject({ minutes: 52 }); // Shards last 52 minutes
 
 const realms = ['prairie', 'forest', 'valley', 'wasteland', 'vault'] as const;
@@ -105,8 +105,10 @@ interface ConfirmedObservation {
 
 // Store your confirmed observations here
 const confirmedObservations: ConfirmedObservation[] = [
-  { date: '2025-09-13', realmIndex: 0, map: 'prairie.cave' },
-  { date: '2025-09-14', realmIndex: 1, map: 'forest.sunny' },
+  { date: '2025-09-13', realmIndex: 0, map: 'prairie.cave' }, // Memory: unknown [?], Candles: 1.5
+  { date: '2025-09-14', realmIndex: 1, map: 'forest.sunny' }, // Memory: Jellyfish [1], Candles: 3.5
+  { date: '2025-09-19', realmIndex: 1, map: 'forest.tree' }, // Memory: Elder [6], Candles: 3.5
+  { date: '2025-09-21', realmIndex: 3, map: 'wasteland.ark' }, // Memory: Whale Void [5], Candles: 3.5
   // Add more as you confirm them
 ];
 
