@@ -1,6 +1,6 @@
 # Sky Shard Web Application
 
-[Open App](http://hf2091tfy6s.sn.mynetname.net/en)
+[Open App](https://netease-shards.pages.dev/en)
 
 ## Description
 
@@ -8,19 +8,13 @@ Compute the color, time and location of [Shard Eruptions](https://sky-children-o
 
 Shard is computed as described in [Shard Prediction Rule](./ShardPredictionRule.md) and calculated [here](./src/data/shard.ts)
 
-## Localizations
-
-Google sheet link: [Sky Shard Translation](https://docs.google.com/spreadsheets/d/16eSANTI310SY8uWjsjbxNBzyD-49hwF3OGYRkFPykoo/edit)
-
-Languages will be downloaded into `src/i18n/locales.json` from Google Sheets when the app is built.
-
 ## Routes
 
 Processed by [Setting Context](./src/context/Settings.tsx)
 
 - `/` - Today's Shard Eruption page
 - `/:lang` - Translation
-  - Available languages are in [Google Sheet](https://docs.google.com/spreadsheets/d/16eSANTI310SY8uWjsjbxNBzyD-49hwF3OGYRkFPykoo/edit#gid=2102926823)
+  - Available languages are in english for now.
 - Relative day
   - `/:lang/tomorrow` or `/tmr` - Tomorrow's Shard Eruption page
   - `/:lang/yesterday` or `/ytd` - Yesterday's Shard Eruption page
@@ -72,7 +66,7 @@ pnpm build
 
 ## Feedback & Issues
 
-Feel free to open an issue or pull request for any feedback or issues. No need to be formal, just let me know what you think. I will try to respond as soon as possible.
+Feel free to open an issue or pull request for any feedback or issues. No need to be formal, just let me know what you think. I will do my best in solving it.
 
 ## License
 
