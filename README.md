@@ -4,7 +4,7 @@
 
 ## Description
 
-Compute the color, time and location of [Shard Eruptions](https://sky-children-of-the-light.fandom.com/wiki/NetEase#Differences) in the Game "光·遇 ()".
+Compute the color, time and location of [Shard Eruptions](https://sky-children-of-the-light.fandom.com/wiki/NetEase#Differences) in the Game "光·遇 (Light·encounter)".
 
 Shard is computed as described in [Shard Prediction Rule](./ShardPredictionRule.md) and calculated [here](./src/data/shard.ts)
 
