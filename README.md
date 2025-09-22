@@ -1,6 +1,6 @@
 # Sky Shard Web Application
 
-[Open App](http://hf2091tfy6s.sn.mynetname.net:2088/en)
+[Open App](http://hf2091tfy6s.sn.mynetname.net/en)
 
 ## Description
 
