@@ -275,7 +275,7 @@ export default function Header() {
         href='/'
         onClick={e => (navigateToday(), e.preventDefault())}
       >
-        <img src='/icons/appName.webp' alt='Sky Shards' className='h-7 w-auto md:h-10' />
+        <img src='/icons/appName.webp' alt='NetEase Shards' className='h-7 w-auto md:h-10' />
       </a>
 
       <HeaderDateTime navigateToday={navigateToday} />
