@@ -7,10 +7,10 @@ import { ClockNow } from '../../components/Clock';
 import { useModal } from '../../context/ModalContext';
 import { useNow } from '../../context/Now';
 import { useSettings } from '../../context/Settings';
-import DateSelectionModal from '../Modals/DateSelector';
-import SettingsModal from '../Modals/Settings';
-import EventsModal from '../Modals/EventsModal';
 import { getDailyEvents, getNextEvent, getCurrentEvents } from '../../data/events';
+import DateSelectionModal from '../Modals/DateSelector';
+import EventsModal from '../Modals/EventsModal';
+import SettingsModal from '../Modals/Settings';
 
 function HeaderDateTime({ navigateToday }: { navigateToday: () => void }) {
   const { application: now } = useNow();
@@ -117,37 +117,35 @@ function HeaderEventDisplay() {
   }
 
   return (
-    <div className="relative">
+    <div className='relative'>
       {/* Compact event display */}
       <div
-        className="flex items-center cursor-pointer px-2 py-1 rounded hover:bg-white hover:bg-opacity-10 transition-colors"
+        className='flex cursor-pointer items-center rounded px-2 py-1 transition-colors hover:bg-white hover:bg-opacity-10'
         onClick={() => setIsExpanded(!isExpanded)}
       >
         {currentEvents.length > 0 ? (
-          <div className="flex items-center">
-            <span className="text-sm mr-1">{currentEvents[0].type === 'grandma' ? '👵' : '🐢'}</span>
-            <span className="text-xs">Now: {currentEvents[0].name}</span>
+          <div className='flex items-center'>
+            <span className='mr-1 text-sm'>{currentEvents[0].type === 'grandma' ? '👵' : '🐢'}</span>
+            <span className='text-xs'>Now: {currentEvents[0].name}</span>
           </div>
         ) : nextEvent ? (
-          <div className="flex items-center">
-            <span className="text-sm mr-1">{nextEvent.type === 'grandma' ? '👵' : '🐢'}</span>
-            <span className="text-xs">Next: {formatTimeUntil(nextEvent)}</span>
+          <div className='flex items-center'>
+            <span className='mr-1 text-sm'>{nextEvent.type === 'grandma' ? '👵' : '🐢'}</span>
+            <span className='text-xs'>Next: {formatTimeUntil(nextEvent)}</span>
           </div>
         ) : (
-          <span className="text-xs opacity-70">No upcoming events</span>
+          <span className='text-xs opacity-70'>No upcoming events</span>
         )}
-        <span className="ml-1 text-xs">
-          {isExpanded ? <FaChevronUp size={10} /> : <FaChevronDown size={10} />}
-        </span>
+        <span className='ml-1 text-xs'>{isExpanded ? <FaChevronUp size={10} /> : <FaChevronDown size={10} />}</span>
       </div>
 
       {/* Expanded event panel */}
       {isExpanded && (
-        <div className="absolute top-full right-0 mt-1 w-80 glass rounded shadow-lg z-10 p-3">
+        <div className='glass absolute right-0 top-full z-10 mt-1 w-80 rounded p-3 shadow-lg'>
           {/* Current Events */}
           {currentEvents.length > 0 && (
-            <div className="mb-3">
-              <h4 className="font-semibold text-green-300 text-sm mb-2">Happening Now</h4>
+            <div className='mb-3'>
+              <h4 className='mb-2 text-sm font-semibold text-green-300'>Happening Now</h4>
               {currentEvents.map((event, index) => (
                 <EventProgressBar key={index} event={event} currentTime={application} />
               ))}
@@ -156,10 +154,10 @@ function HeaderEventDisplay() {
 
           {/* Upcoming Events - Two columns */}
           {nextEvents.length > 0 && (
-            <div className="grid grid-cols-2 gap-4">
+            <div className='grid grid-cols-2 gap-4'>
               {/* Turtle Events */}
               <div>
-                <h4 className="font-semibold text-sm mb-2">Turtle 🐢</h4>
+                <h4 className='mb-2 text-sm font-semibold'>Turtle 🐢</h4>
                 {nextEvents
                   .filter(event => event.type === 'turtle')
                   .slice(0, 2)
@@ -175,7 +173,7 @@ function HeaderEventDisplay() {
 
               {/* Grandma Events */}
               <div>
-                <h4 className="font-semibold text-sm mb-2">Grandma 👵</h4>
+                <h4 className='mb-2 text-sm font-semibold'>Grandma 👵</h4>
                 {nextEvents
                   .filter(event => event.type === 'grandma')
                   .slice(0, 2)
@@ -197,7 +195,15 @@ function HeaderEventDisplay() {
 }
 
 // Updated Event Progress Bar Component
-function EventProgressBar({ event, currentTime, formatTime }: { event: any, currentTime: any, formatTime?: (event: any) => string }) {
+function EventProgressBar({
+  event,
+  currentTime,
+  formatTime,
+}: {
+  event: any;
+  currentTime: any;
+  formatTime?: (event: any) => string;
+}) {
   const isCurrent = currentTime >= event.start && currentTime <= event.end;
   const isFuture = currentTime < event.start;
 
@@ -230,16 +236,14 @@ function EventProgressBar({ event, currentTime, formatTime }: { event: any, curr
   };
 
   return (
-    <div className={`mb-2 p-2 rounded ${isCurrent ? 'bg-green-900 bg-opacity-20' : 'bg-gray-900 bg-opacity-10'}`}>
-      <div className="flex justify-between items-center mb-1">
-        <span className="text-xs font-medium">{event.name}</span>
-        <span className="text-xs opacity-80">
-          {formatTime ? formatTime(event) : event.start.toFormat('HH:mm')}
-        </span>
+    <div className={`mb-2 rounded p-2 ${isCurrent ? 'bg-green-900 bg-opacity-20' : 'bg-gray-900 bg-opacity-10'}`}>
+      <div className='mb-1 flex items-center justify-between'>
+        <span className='text-xs font-medium'>{event.name}</span>
+        <span className='text-xs opacity-80'>{formatTime ? formatTime(event) : event.start.toFormat('HH:mm')}</span>
       </div>
 
       {/* Progress Bar */}
-      <div className="w-full bg-gray-700 bg-opacity-30 rounded-full h-1.5 mb-1">
+      <div className='mb-1 h-1.5 w-full rounded-full bg-gray-700 bg-opacity-30'>
         <div
           className={`h-1.5 rounded-full ${isCurrent ? 'bg-green-500' : 'bg-blue-500'}`}
           style={{ width: `${isCurrent ? progress : 0}%` }}
@@ -247,9 +251,7 @@ function EventProgressBar({ event, currentTime, formatTime }: { event: any, curr
       </div>
 
       {/* Status Text */}
-      <div className="text-xs opacity-70">
-        {formatTimeDisplay()}
-      </div>
+      <div className='text-xs opacity-70'>{formatTimeDisplay()}</div>
     </div>
   );
 }
@@ -275,7 +277,7 @@ export default function Header() {
         href='/'
         onClick={e => (navigateToday(), e.preventDefault())}
       >
-        <img src='/icons/appName.webp' alt='NetEase Shards' className='h-7 w-auto md:h-10' />
+        <img src='/icons/appName1.png' alt='NetEase Shards' className='h-7 w-auto md:h-10' />
       </a>
 
       <HeaderDateTime navigateToday={navigateToday} />
@@ -292,19 +294,19 @@ export default function Header() {
             });
           }}
         >
-          <div className="flex items-center">
+          <div className='flex items-center'>
             {currentEvents.length > 0 ? (
               <>
-                <span className="text-sm mr-1">{currentEvents[0].type === 'grandma' ? '👵' : '🐢'}</span>
-                <span className="text-xs">Now</span>
+                <span className='mr-1 text-sm'>{currentEvents[0].type === 'grandma' ? '👵' : '🐢'}</span>
+                <span className='text-xs'>Now</span>
               </>
             ) : nextEvent ? (
               <>
-                <span className="text-sm mr-1">{nextEvent.type === 'grandma' ? '👵' : '🐢'}</span>
-                <span className="text-xs">Next</span>
+                <span className='mr-1 text-sm'>{nextEvent.type === 'grandma' ? '👵' : '🐢'}</span>
+                <span className='text-xs'>Next</span>
               </>
             ) : (
-              <span className="text-xs">Events</span>
+              <span className='text-xs'>Events</span>
             )}
           </div>
         </HeaderButton>

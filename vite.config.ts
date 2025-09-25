@@ -34,10 +34,10 @@ try {
 // https://vitejs.dev/config/
 export default defineConfig({
   preview: {
-    allowedHosts: ['hf2091tfy6s.sn.mynetname.net']
+    allowedHosts: ['netease-shards.pages.dev']
   },
   server: {
-    allowedHosts: ['hf2091tfy6s.sn.mynetname.net']
+    allowedHosts: ['netease-shards.pages.dev']
   },
   build: {
     rollupOptions: {

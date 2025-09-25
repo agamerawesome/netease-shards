@@ -36,7 +36,7 @@ export function Footer() {
 
       {/* GitHub button on the right */}
       <a
-        href='https://github.com/agamerawesome/sky-shards-light-yu'
+        href='https://github.com/agamerawesome/netease-shards'
         target='_blank'
         rel='noopener noreferrer'
         className='flex items-center justify-center p-2 rounded-lg hover:bg-zinc-700 transition-colors'

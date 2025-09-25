@@ -107,8 +107,11 @@ interface ConfirmedObservation {
 const confirmedObservations: ConfirmedObservation[] = [
   { date: '2025-09-13', realmIndex: 0, map: 'prairie.cave' }, // Memory: unknown [?], Candles: 1.5
   { date: '2025-09-14', realmIndex: 1, map: 'forest.sunny' }, // Memory: Jellyfish [1], Candles: 3.5
+  // 2025-09-17 forgot to log it [black shard]
   { date: '2025-09-19', realmIndex: 1, map: 'forest.tree' }, // Memory: Elder [6], Candles: 3.5
   { date: '2025-09-21', realmIndex: 3, map: 'wasteland.ark' }, // Memory: Whale Void [5], Candles: 3.5
+  { date: '2025-09-24', realmIndex: 1, map: 'forest.end' }, // Memory: None [Shard: Black]
+  { date: '2025-09-26', realmIndex: 1, map: 'forest.tree' }, // Memory: ???
   // Add more as you confirm them
 ];
 

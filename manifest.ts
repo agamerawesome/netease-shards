@@ -52,8 +52,8 @@ const shortcutsIcon = [
 ];
 
 const manifest: Partial<ManifestOptions> = {
-  name: 'Sky Shards',
-  short_name: 'Sky Shards',
+  name: 'NetEase Shards',
+  short_name: 'NetEase Shards',
   description: `Shard Eruption in the game '光·遇 (Light·encounter)'.`,
   theme_color: '#8a76b1',
   background_color: '#8a76b1',
