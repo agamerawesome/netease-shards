@@ -111,7 +111,7 @@ const confirmedObservations: ConfirmedObservation[] = [
   { date: '2025-09-19', realmIndex: 1, map: 'forest.tree' }, // Memory: Elder [6], Candles: 3.5
   { date: '2025-09-21', realmIndex: 3, map: 'wasteland.ark' }, // Memory: Whale Void [5], Candles: 3.5
   { date: '2025-09-24', realmIndex: 1, map: 'forest.end' }, // Memory: None [Shard: Black]
-  { date: '2025-09-26', realmIndex: 1, map: 'forest.tree' }, // Memory: ???
+  { date: '2025-09-26', realmIndex: 3, map: 'wasteland.ark' }, // Memory: ???
   // Add more as you confirm them
 ];
 
