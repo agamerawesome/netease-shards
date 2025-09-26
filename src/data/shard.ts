@@ -62,11 +62,11 @@ const shardSchedule: Record<number, (dayOfMonth: number) => ShardConfig> = {
 
 // Updated reward values - set to 2 candles instead of 1.5
 const overrideRewardAC: Record<string, number> = {
-  'prairie.cave': 2, // Daylight Prairie Cave
-  'forest.end': 2,
-  'valley.dreams': 2,
-  'forest.tree': 2,
-  'vault.jelly': 2,
+  //'prairie.cave': 2, // Daylight Prairie Cave
+  //'forest.end': 2,
+  //'valley.dreams': 2,
+  //'forest.tree': 2,
+  //'vault.jelly': 2,
   // Add other locations as needed, all set to 2 candles
 };
 
@@ -107,7 +107,7 @@ interface ConfirmedObservation {
 const confirmedObservations: ConfirmedObservation[] = [
   { date: '2025-09-13', realmIndex: 0, map: 'prairie.cave' }, // Memory: unknown [?], Candles: 1.5
   { date: '2025-09-14', realmIndex: 1, map: 'forest.sunny' }, // Memory: Jellyfish [1], Candles: 3.5
-  // 2025-09-17 forgot to log it [black shard]
+  { date: '2025-09-17', realmIndex: 4, map: 'vault.starlight' }, //Memory: None [Shard: Black], Unsure forgopt to LOG
   { date: '2025-09-19', realmIndex: 1, map: 'forest.tree' }, // Memory: Elder [6], Candles: 3.5
   { date: '2025-09-21', realmIndex: 3, map: 'wasteland.ark' }, // Memory: Whale Void [5], Candles: 3.5
   { date: '2025-09-24', realmIndex: 1, map: 'forest.end' }, // Memory: None [Shard: Black]
@@ -205,7 +205,7 @@ export function getShardInfo(date: DateTime, override?: Override) {
 
   // Use NetEase-specific realm rotation
   const { realmIndex, map } = getNetEaseRealmRotation(today);
-  const rewardAC = isRed ? overrideRewardAC[map] ?? 2 : undefined; // Default to 2 candles
+  const rewardAC = isRed ? overrideRewardAC[map] ?? 3.5 : undefined; // Default to 3.5 candles
   const numVarient = numMapVarients[map as keyof typeof numMapVarients] ?? 1;
 
   // Create occurrences based on the fixed times
