@@ -14,20 +14,13 @@ console.log('Version', process.env.VITE_VERSION);
 console.log('Branch', process.env.VITE_GIT_BRANCH);
 console.log('Commit Ref', process.env.VITE_GIT_COMMIT);
 
-const translationJsonUrl =
-  'https://script.google.com/macros/s/AKfycbxWmAhleoWLtyVpXgICkkGUdAZKi_JPkuSxJ243H33316scaRFgY0kEq6UR3iPajsq4/exec';
+const translationJsonPath = './src/i18n/translations.json'; // Updated path to the new location
 
-process.env.VITE_GS_TRANSLATION_URL = translationJsonUrl;
-
-if (!process.env.VITE_SHARD_REMOTE_URL) {
-  process.env.VITE_SHARD_REMOTE_URL = 'https://sky-shardfig.plutoy.top';
-}
-
-// Check if the translation file (locales.json) exists
+// Check if the translation file (translations.json) exists
 try {
-  stat(normalizePath('./src/i18n/locales.json'));
+  stat(normalizePath(translationJsonPath));
 } catch (e) {
-  console.error('locales.json not found, run pnpm downloadTrans to download it');
+  console.error('translations.json not found, run pnpm downloadTrans to download it');
   process.exit(1);
 }
 
