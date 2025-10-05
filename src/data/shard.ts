@@ -65,8 +65,8 @@ const overrideRewardAC: Record<string, number> = {
   'prairie.cave': 1.5, // Daylight Prairie Cave
   'prairie.island': 3,
   'wasteland.graveyard': 2.5,
-  //'forest.tree': 2,
-  //'vault.jelly': 2,
+  'forest.end': 2.5, // Rainforest End Temple - 2025/10/04
+  'valley.dreams': 2, // Wasteland Giant Creature Field - 2025/10/11
   // Add other locations as needed, all set to 2 candles
 };
 
