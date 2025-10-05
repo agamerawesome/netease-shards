@@ -64,7 +64,7 @@ const shardSchedule: Record<number, (dayOfMonth: number) => ShardConfig> = {
 const overrideRewardAC: Record<string, number> = {
   'prairie.cave': 1.5, // Daylight Prairie Cave
   'prairie.island': 3,
-  //'valley.dreams': 2,
+  'wasteland.graveyard': 2.5,
   //'forest.tree': 2,
   //'vault.jelly': 2,
   // Add other locations as needed, all set to 2 candles
@@ -113,6 +113,8 @@ const confirmedObservations: ConfirmedObservation[] = [
   { date: '2025-09-24', realmIndex: 1, map: 'forest.end' }, // Memory: None [Shard: Black]
   { date: '2025-09-26', realmIndex: 3, map: 'wasteland.graveyard' }, // Memory: Jellyfish [1], Candles: 3.5
   { date: '2025-09-28', realmIndex: 0, map: 'prairie.island' }, // Memory: JellyFish [1], Candles: 3
+  { date: '2025-10-04', realmIndex: 1, map: 'forest.end' }, // Memory: idk i forgot to visit [?], Candles: maybe default idk forgot to visit
+  { date: '2025-10-05', realmIndex: 2, map: 'valley.hermit' }, // Memory: idk i forgot to visit [?], Candles: maybe default idk forgot to visit
   // Add more as you confirm them
 ];
 
