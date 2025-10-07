@@ -60,14 +60,13 @@ const shardSchedule: Record<number, (dayOfMonth: number) => ShardConfig> = {
   }),
 };
 
-// Updated reward values - set to 2 candles instead of 1.5
 const overrideRewardAC: Record<string, number> = {
   'prairie.cave': 1.5, // Daylight Prairie Cave
   'prairie.island': 3,
   'wasteland.graveyard': 2.5,
   'forest.end': 2.5, // Rainforest End Temple - 2025/10/04
   'valley.dreams': 2, // Wasteland Giant Creature Field - 2025/10/11
-  // Add other locations as needed, all set to 2 candles
+  // Add other locations as needed, all set to 3.5 candles
 };
 
 // Used to validate variation input, not listed = 1
