@@ -106,25 +106,26 @@ interface ConfirmedObservation {
 const confirmedObservations: ConfirmedObservation[] = [
   { date: '2025-09-13', realmIndex: 0, map: 'prairie.cave' }, // Memory: unknown [?], Candles: 1.5
   { date: '2025-09-14', realmIndex: 1, map: 'forest.sunny' }, // Memory: Jellyfish [1], Candles: 3.5
-  { date: '2025-09-17', realmIndex: 4, map: 'vault.starlight' }, // Memory: None [Shard: Black], Unsure forgot to log
+  { date: '2025-09-17', realmIndex: 4, map: 'vault.starlight' }, //[Shard: Black]
   { date: '2025-09-19', realmIndex: 1, map: 'forest.tree' }, // Memory: Elder [6], Candles: 3.5
   { date: '2025-09-21', realmIndex: 3, map: 'wasteland.ark' }, // Memory: Whale Void [5], Candles: 3.5
-  { date: '2025-09-24', realmIndex: 1, map: 'forest.end' }, // Memory: None [Shard: Black]
-  { date: '2025-09-26', realmIndex: 3, map: 'wasteland.graveyard' }, // Memory: Jellyfish [1], Candles: 3.5
+  { date: '2025-09-24', realmIndex: 1, map: 'forest.end' }, //[Shard: Black]
+  { date: '2025-09-26', realmIndex: 3, map: 'wasteland.crab' }, // IDK
   { date: '2025-09-28', realmIndex: 0, map: 'prairie.island' }, // Memory: Jellyfish [1], Candles: 3
-  { date: '2025-10-04', realmIndex: 1, map: 'forest.end' }, // Memory: unknown, Candles: 2.5
+  { date: '2025-10-04', realmIndex: 1, map: 'forest.end' }, // Memory: IDK, Candles: IDK
   { date: '2025-10-05', realmIndex: 2, map: 'valley.hermit' }, // Memory: unknown, Candles: 3.5
-  { date: '2025-10-07', realmIndex: 4, map: 'vault.starlight' }, // Memory: None [Black Shard], Candles: N/A
-  { date: '2025-10-11', realmIndex: 2, map: 'valley.dreams' }, // Memory: None [?], Candles: 2
+  { date: '2025-10-07', realmIndex: 4, map: 'vault.starlight' }, //[Black Shard]
+  { date: '2025-10-11', realmIndex: 3, map: 'wasteland.graveyard' }, // Memory: Crab, Candles: 2
   { date: '2025-10-12', realmIndex: 4, map: 'vault.jelly' }, // Memory: Jellyfish [1], Candles: 3.5
   { date: '2025-10-15', realmIndex: 1, map: 'forest.brook' }, // Memory: None [Black Shard]
   { date: '2025-10-17', realmIndex: 4, map: 'vault.jelly' }, // Memory: Jellyfish [1], Candles: 3.5
-  { date: '2025-10-19', realmIndex: 1, map: 'forest.tree' }, // Memory: Elder [6], Candles: 3.5
-  { date: '2025-10-21', realmIndex: 4, map: 'vault.starlight' }, // Memory: None [Black Shard]
-  { date: '2025-10-24', realmIndex: 1, map: 'forest.end' }, // Memory: None [?], Candles: 3.5
-  { date: '2025-10-26', realmIndex: 3, map: 'wasteland.ark' }, // Memory: Jellyfish [1], Candles: 3.5
-  { date: '2025-10-29', realmIndex: 1, map: 'forest.brook' }, // Memory: None [Black Shard]
-  { date: '2025-10-31', realmIndex: 3, map: 'wasteland.crab' }, // Memory: Jellyfish [1], Candles: 3.5
+
+  //{ date: '2025-10-19', realmIndex: 1, map: 'forest.tree' }, // Memory: Elder [6], Candles: 3.5
+  //{ date: '2025-10-21', realmIndex: 4, map: 'vault.starlight' }, // Memory: None [Black Shard]
+  //{ date: '2025-10-24', realmIndex: 1, map: 'forest.end' }, // Memory: None [?], Candles: 3.5
+  //{ date: '2025-10-26', realmIndex: 3, map: 'wasteland.ark' }, // Memory: Jellyfish [1], Candles: 3.5
+  //{ date: '2025-10-29', realmIndex: 1, map: 'forest.brook' }, // Memory: None [Black Shard]
+  //{ date: '2025-10-31', realmIndex: 3, map: 'wasteland.crab' }, // Memory: Jellyfish [1], Candles: 3.5
 ];
 
 function getNetEaseRealmRotation(date: DateTime): { realmIndex: number; map: Areas } {
