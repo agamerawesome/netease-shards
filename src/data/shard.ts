@@ -119,13 +119,9 @@ const confirmedObservations: ConfirmedObservation[] = [
   { date: '2025-10-12', realmIndex: 4, map: 'vault.jelly' }, // Memory: Jellyfish [1], Candles: 3.5
   { date: '2025-10-15', realmIndex: 1, map: 'forest.brook' }, // Memory: None [Black Shard]
   { date: '2025-10-17', realmIndex: 4, map: 'vault.jelly' }, // Memory: Jellyfish [1], Candles: 3.5
-
-  //{ date: '2025-10-19', realmIndex: 1, map: 'forest.tree' }, // Memory: Elder [6], Candles: 3.5
-  //{ date: '2025-10-21', realmIndex: 4, map: 'vault.starlight' }, // Memory: None [Black Shard]
-  //{ date: '2025-10-24', realmIndex: 1, map: 'forest.end' }, // Memory: None [?], Candles: 3.5
-  //{ date: '2025-10-26', realmIndex: 3, map: 'wasteland.ark' }, // Memory: Jellyfish [1], Candles: 3.5
-  //{ date: '2025-10-29', realmIndex: 1, map: 'forest.brook' }, // Memory: None [Black Shard]
-  //{ date: '2025-10-31', realmIndex: 3, map: 'wasteland.crab' }, // Memory: Jellyfish [1], Candles: 3.5
+  { date: '2025-10-19', realmIndex: 1, map: 'forest.tree' }, // IDK
+  { date: '2025-10-21', realmIndex: 4, map: 'vault.starlight' }, // Memory: None [Black Shard]
+  { date: '2026-04-19', realmIndex: 4, map: 'vault.starlight' }, // IDK
 ];
 
 function getNetEaseRealmRotation(date: DateTime): { realmIndex: number; map: Areas } {
