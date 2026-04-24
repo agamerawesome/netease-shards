@@ -3,7 +3,7 @@ import { Settings as LuxonSettings } from 'luxon';
 import { ModalProvider } from './context/ModalContext';
 import { NowProvider } from './context/Now';
 import { SettingsProvider } from './context/Settings';
-import useFeedbackFormUrl from './hooks/useFeedbackFom';
+
 import Footer from './sections/App/Footer';
 import Header from './sections/App/Header';
 import ShardCarousel from './sections/Shard/Carousel';
@@ -11,32 +11,20 @@ import ShardCarousel from './sections/Shard/Carousel';
 LuxonSettings.defaultLocale = 'en';
 LuxonSettings.defaultZone = 'Asia/Shanghai';
 
-function ErrorFallback({ error }: FallbackProps) {
-  const feedbackUrl = useFeedbackFormUrl({
-    error,
-    type: 'Bug',
-  });
+function ErrorFallback({ error: _ }: FallbackProps) {
   return (
     <div className='absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform text-center [&>*]:mb-2'>
       <img src='/icons/appName.webp' alt='NetEase Shards' className='mx-auto h-12' />
       <p className='text-sm'>Sorry, the app crashed</p>
-      <p className='text-sm'>Please submit a bug report</p>
+      <p className='text-sm'>Please report the issue on Discord</p>
       <div className='mt-2 flex flex-row flex-wrap items-center justify-center gap-2'>
         <a
-          href={feedbackUrl}
+          href='https://discord.gg/HcXhhry6HP'
           target='_blank'
           rel='noreferrer'
           className='whitespace-nowrap rounded-xl bg-purple-700 px-2 pb-1 pt-0.5 text-white'
         >
-          <span className='text-sm font-bold '>Submit bug report</span>
-        </a>
-        <a
-          href='about:blank'
-          target='_blank'
-          rel='noreferrer'
-          className='whitespace-nowrap rounded-xl bg-purple-700 px-2 pb-1 pt-0.5 text-white'
-        >
-          <span className='text-sm font-bold '>Try the old version</span>
+          <span className='text-sm font-bold'>Join Discord</span>
         </a>
       </div>
       <p>

@@ -215,6 +215,19 @@
     "turtleEvents": "Turtle Events",
     "grandmaEvents": "Grandma Events",
     "noTurtleEvents": "No turtle events scheduled",
-    "noGrandmaEvents": "No grandma events scheduled"
+    "noGrandmaEvents": "No grandma events scheduled",
+    "grandmaName": "Grandma",
+    "grandmaLocation": "Treehouse",
+    "grandmaDuration": "30 min",
+    "turtleName": "Turtle",
+    "turtleLocation": "Sanctuary",
+    "turtleDuration": "20 min",
+    "statusNow": "NOW",
+    "statusDone": "done",
+    "labelToday": "Today",
+    "labelNextFive": "Next 5",
+    "happeningNow": "Happening now",
+    "endsIn": "ends {{min}}m",
+    "noMoreToday": "No more today"
   }
 }

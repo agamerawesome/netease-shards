@@ -72,6 +72,10 @@ export default function EventsModal({ hideModal }: ModalProps) {
 
 // Event Card Component
 function EventCard({ event, currentTime, isCurrent }: { event: any, currentTime: any, isCurrent: boolean }) {
+    const { t } = useTranslation('events');
+    const eventName = event.type === 'grandma' ? t('grandmaName') : t('turtleName');
+    const eventLocation = event.type === 'grandma' ? t('grandmaLocation') : t('turtleLocation');
+
     const formatTimeUntil = () => {
         if (isCurrent) {
             const minutesLeft = Math.round(event.end.diff(currentTime).as('minutes'));
@@ -97,8 +101,8 @@ function EventCard({ event, currentTime, isCurrent }: { event: any, currentTime:
         <div className={`p-3 rounded-lg ${isCurrent ? 'bg-green-900 bg-opacity-30 border border-green-500' : 'bg-gray-900 bg-opacity-20'}`}>
             <div className="flex justify-between items-start mb-2">
                 <div className="flex-1">
-                    <h4 className="font-medium">{event.name}</h4>
-                    <p className="text-sm opacity-80">{event.location}</p>
+                    <h4 className="font-medium">{eventName}</h4>
+                    <p className="text-sm opacity-80">{eventLocation}</p>
                 </div>
                 <span className="text-2xl">{event.type === 'grandma' ? '👵' : '🐢'}</span>
             </div>
