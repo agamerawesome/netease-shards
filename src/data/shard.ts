@@ -117,6 +117,21 @@ const manualLocationOverrides: ManualOverride[] = [
   { date: '2026-04-26', realmIndex: 3, map: 'wasteland.ark', note: 'calendar: 暮土-失落方舟' },
   { date: '2026-04-29', realmIndex: 1, map: 'forest.boneyard', note: 'calendar: 雨林-密林遗迹' },
   { date: '2026-05-02', realmIndex: 4, map: 'vault.jelly', note: 'calendar: 禁阁-星漠水母湾' },
+
+  // ── May 2026 calendar ────────────────────────────────────────────────────
+  { date: '2026-05-02', realmIndex: 4, map: 'vault.starlight', note: 'calendar: 星光沙漠沉船' },
+  { date: '2026-05-03', realmIndex: 0, map: 'prairie.island', note: 'calendar: 云野圣岛' },
+  { date: '2026-05-05', realmIndex: 2, map: 'valley.rink', note: 'calendar: 霞谷溜冰场' },
+  { date: '2026-05-09', realmIndex: 1, map: 'forest.end', note: 'calendar: 雨林神殿后院' },
+  { date: '2026-05-10', realmIndex: 2, map: 'valley.hermit', note: 'calendar: 霞谷雪隐峰' },
+  { date: '2026-05-12', realmIndex: 4, map: 'vault.starlight', note: 'calendar: 禁阁星光沙漠' },
+  { date: '2026-05-17', realmIndex: 4, map: 'vault.starlight', note: 'calendar: 星光沙漠沉船' },
+  { date: '2026-05-20', realmIndex: 2, map: 'valley.rink', note: 'calendar: 霞谷溜冰场' },
+  { date: '2026-05-22', realmIndex: 4, map: 'vault.starlight', note: 'calendar: 星光沙漠沉船' },
+  { date: '2026-05-24', realmIndex: 1, map: 'forest.sunny', note: 'calendar: 雨林秘密花园' },
+  { date: '2026-05-27', realmIndex: 4, map: 'vault.starlight', note: 'calendar: 禁阁星光沙漠' },
+  { date: '2026-05-29', realmIndex: 1, map: 'forest.tree', note: 'calendar: 雨林大树屋' },
+  { date: '2026-05-31', realmIndex: 3, map: 'wasteland.ark', note: 'calendar: 暮土方舟' },
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
