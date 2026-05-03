@@ -51,7 +51,7 @@ export type RemoteConfig = RemoteConfigResponse;
 // }
 
 const fetcher = (file: 'minified.json' | 'all.json') =>
-  fetch((import.meta.env.VITE_SHARD_REMOTE_URL as string) + '/' + file).then(res =>
+  fetch((import.meta.env.VITE_SHARD_REMOTE_URL as string) + '/' + file, { cache: 'no-cache' }).then(res =>
     res.json(),
   ) as Promise<RemoteConfig>;
 
