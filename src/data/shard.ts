@@ -42,26 +42,26 @@ const overrideRewardAC: Record<string, number> = {
 };
 
 export const numMapVarients = {
-  'prairie.butterfly': 3,
-  'prairie.village': 3,
-  'prairie.bird': 2,
-  'prairie.island': 3,
-  'prairie.cave': 2,
-  'forest.brook': 2,
-  'forest.boneyard': 2,
-  'forest.end': 2,
-  'forest.tree': 2,
-  'forest.sunny': 2,
-  'valley.rink': 3,
-  'valley.dreams': 2,
-  'valley.hermit': 2,
-  'wasteland.temple': 3,
-  'wasteland.battlefield': 3,
-  'wasteland.graveyard': 2,
-  'wasteland.crab': 2,
-  'wasteland.ark': 4,
-  'vault.starlight': 3,
-  'vault.jelly': 2,
+  'prairie.butterfly': 3, //Black
+  'prairie.village': 3, //Black
+  'prairie.bird': 2, //Red
+  'prairie.island': 3, //Red
+  'prairie.cave': 2, //Red
+  'forest.brook': 2, //Black
+  'forest.boneyard': 2, //Black
+  'forest.end': 2, //Red
+  'forest.tree': 2, //Red
+  'forest.sunny': 2, //Red
+  'valley.rink': 3, //Black
+  'valley.dreams': 2, //Red
+  'valley.hermit': 2, //Red
+  'wasteland.temple': 3,  //Black
+  'wasteland.battlefield': 3, //Black
+  'wasteland.graveyard': 2, //Red
+  'wasteland.crab': 2, //Red
+  'wasteland.ark': 4, //Red
+  'vault.starlight': 3, //black
+  'vault.jelly': 2, //Red
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -137,66 +137,57 @@ const manualLocationOverrides: ManualOverride[] = [
 // ─────────────────────────────────────────────────────────────────────────────
 // REALM ROTATION ALGORITHM
 //
-// Fully validated against April 2026 CN community calendar (12/12 correct).
-// Note: the calendar itself had Apr 17 wrong — in-game observation is ground truth.
+// Resets each calendar month. Realm is determined purely by day-of-month:
 //
-// ANCHOR: Sunday 2026-04-19 = forest (realm 1)
-// Sunday advances +2 realms per week with no monthly reset.
+//   realmIndex = (dayOfMonth + 2) % 5
 //
-// Per-weekday offsets from next-Sunday realm (Luxon: 1=Mon…7=Sun):
-//   Sun (+0), Sat (+4), Fri (+3), Wed (+1), Tue (+0)
+//   day 1→3(wasteland), 2→4(vault), 3→0(prairie), 4→1(forest), 5→2(valley), …
 //
-// Why Fri=+3: Friday's realm equals the PREVIOUS week's Sunday realm,
-//   which is the same as next-Sunday − 2 = next-Sunday + 3 (mod 5).
+// Validated against all April + May 2026 CN community calendar entries.
+//
+// Each map is exclusively Black or Red — the shard type for the day (from
+// shardSchedule) selects which map pool to draw from within the realm.
+// The specific map within the pool is not yet confirmed; the fallback cycles
+// through available maps using dayOfMonth % pool.length.
+//
+// Manual overrides in manualLocationOverrides[] are ground truth and always
+// win over the algorithm.
 // ─────────────────────────────────────────────────────────────────────────────
-const ANCHOR = DateTime.fromISO('2026-04-19', { zone: 'Asia/Shanghai' });
-const ANCHOR_REALM = 1;
 
-function getSundayRealmForWeek(date: DateTime): number {
-  const sunday = date.weekday === 7
-    ? date
-    : date.plus({ days: 7 - date.weekday });
-  const weeksDiff = Math.round(sunday.diff(ANCHOR, 'weeks').weeks);
-  return ((ANCHOR_REALM + weeksDiff * 2) % 5 + 5) % 5;
-}
-
-// Offset from that week's Sunday realm, by Luxon weekday (1=Mon…7=Sun)
-const realmOffset: Partial<Record<number, number>> = {
-  7: 0, // Sunday
-  6: 4, // Saturday = Sun − 1
-  5: 3, // Friday   = prev-week Sun (= nextSun + 3)
-  3: 1, // Wednesday
-  2: 0, // Tuesday
+// Maps split by shard type — a map only ever hosts one type of shard.
+const blackMapsPerRealm: Record<string, Areas[]> = {
+  prairie:   ['prairie.butterfly', 'prairie.village'],
+  forest:    ['forest.brook', 'forest.boneyard'],
+  valley:    ['valley.rink'],
+  wasteland: ['wasteland.temple', 'wasteland.battlefield'],
+  vault:     ['vault.starlight'],
 };
 
-// Map list per realm — order determines cycling.
-// Update these as more in-game observations confirm the rotation.
-const realmMaps: Record<string, Areas[]> = {
-  prairie: ['prairie.butterfly', 'prairie.village', 'prairie.bird', 'prairie.island', 'prairie.cave'],
-  forest: ['forest.brook', 'forest.boneyard', 'forest.end', 'forest.tree', 'forest.sunny'],
-  valley: ['valley.rink', 'valley.dreams', 'valley.hermit'],
-  wasteland: ['wasteland.temple', 'wasteland.battlefield', 'wasteland.graveyard', 'wasteland.crab', 'wasteland.ark'],
-  vault: ['vault.starlight', 'vault.jelly'],
+const redMapsPerRealm: Record<string, Areas[]> = {
+  prairie:   ['prairie.bird', 'prairie.island', 'prairie.cave'],
+  forest:    ['forest.end', 'forest.tree', 'forest.sunny'],
+  valley:    ['valley.dreams', 'valley.hermit'],
+  wasteland: ['wasteland.graveyard', 'wasteland.crab', 'wasteland.ark'],
+  vault:     ['vault.jelly'],
 };
 
-function getNetEaseRealmRotation(date: DateTime): { realmIndex: number; map: Areas } {
+function getNetEaseRealmRotation(date: DateTime, isRed: boolean): { realmIndex: number; map: Areas } {
+  const cst = date.setZone('Asia/Shanghai').startOf('day');
+
   // Manual overrides take priority
-  const dateStr = date.toFormat('yyyy-MM-dd');
+  const dateStr = cst.toFormat('yyyy-MM-dd');
   const manual = manualLocationOverrides.find(o => o.date === dateStr);
-  if (manual) {
-    return { realmIndex: manual.realmIndex, map: manual.map };
-  }
+  if (manual) return { realmIndex: manual.realmIndex, map: manual.map };
 
-  // Algorithm
-  const realmIndex = (getSundayRealmForWeek(date) + (realmOffset[date.weekday] ?? 0)) % 5;
+  // Realm: monthly reset keyed to calendar day-of-month
+  const realmIndex = (cst.day + 2) % 5;
   const realmName = realms[realmIndex];
-  const maps = realmMaps[realmName];
 
-  const sunday = date.weekday === 7 ? date : date.plus({ days: 7 - date.weekday });
-  const absWeek = Math.round(sunday.diff(ANCHOR, 'weeks').weeks);
-  const mapIndex = ((absWeek % maps.length) + maps.length) % maps.length;
+  // Map: filter by shard type; cycle within pool (inner rotation unconfirmed)
+  const maps = isRed ? redMapsPerRealm[realmName] : blackMapsPerRealm[realmName];
+  const map = maps[cst.day % maps.length];
 
-  return { realmIndex, map: maps[mapIndex] };
+  return { realmIndex, map };
 }
 
 export function getShardInfo(date: DateTime, override?: Override) {
@@ -225,7 +216,7 @@ export function getShardInfo(date: DateTime, override?: Override) {
     };
   }
 
-  const { realmIndex, map } = getNetEaseRealmRotation(today);
+  const { realmIndex, map } = getNetEaseRealmRotation(today, isRed);
   const rewardAC = isRed ? overrideRewardAC[map] ?? 3.5 : undefined;
   const numVarient = numMapVarients[map as keyof typeof numMapVarients] ?? 1;
 
