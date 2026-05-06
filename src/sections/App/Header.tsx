@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { FaCog, FaCalendarDay, FaEllipsisV, FaAngleRight } from 'react-icons/fa';
 import { DateTime } from 'luxon';
@@ -91,16 +92,29 @@ function DesktopEventChip({
 }) {
   const { t } = useTranslation('events');
   const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
+  const [pos, setPos] = useState<{ top: number; right: number } | null>(null);
+  const btnRef = useRef<HTMLButtonElement>(null);
+  const popupRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!open) return;
     const handle = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+      if (
+        btnRef.current && !btnRef.current.contains(e.target as Node) &&
+        popupRef.current && !popupRef.current.contains(e.target as Node)
+      ) setOpen(false);
     };
     document.addEventListener('mousedown', handle);
     return () => document.removeEventListener('mousedown', handle);
   }, [open]);
+
+  const handleOpen = () => {
+    if (!open && btnRef.current) {
+      const r = btnRef.current.getBoundingClientRect();
+      setPos({ top: r.bottom + 8, right: window.innerWidth - r.right });
+    }
+    setOpen(o => !o);
+  };
 
   const currentEvents = getCurrentEvents(application);
   const current = currentEvents.find(e => e.type === type) ?? null;
@@ -113,10 +127,11 @@ function DesktopEventChip({
   const name = type === 'grandma' ? t('grandmaName') : t('turtleName');
 
   return (
-    <div ref={ref} className='relative'>
+    <div className='relative'>
       <button
+        ref={btnRef}
         type='button'
-        onClick={() => setOpen(o => !o)}
+        onClick={handleOpen}
         className={`flex items-center gap-1.5 rounded-lg px-2 py-1 transition-colors ${
           isActive
             ? 'bg-green-500 bg-opacity-25 ring-1 ring-green-400 ring-opacity-50'
@@ -133,10 +148,14 @@ function DesktopEventChip({
           </span>
         </div>
       </button>
-      {open && (
-        <div className='absolute right-0 top-full z-30 mt-2 w-56'>
+      {open && pos && createPortal(
+        <div
+          ref={popupRef}
+          style={{ position: 'fixed', top: pos.top, right: pos.right, zIndex: 9999, width: '14rem' }}
+        >
           <MobileEventPopup type={type} application={application} />
-        </div>
+        </div>,
+        document.body,
       )}
     </div>
   );
@@ -258,16 +277,29 @@ function MobileEventsRow() {
   const { application } = useNow();
   const { t } = useTranslation('events');
   const [activePopup, setActivePopup] = useState<'grandma' | 'turtle' | null>(null);
+  const [popupPos, setPopupPos] = useState<{ top: number; left: number; right: number } | null>(null);
   const rowRef = useRef<HTMLDivElement>(null);
+  const popupRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!activePopup) return;
     const handle = (e: MouseEvent) => {
-      if (rowRef.current && !rowRef.current.contains(e.target as Node)) setActivePopup(null);
+      if (
+        rowRef.current && !rowRef.current.contains(e.target as Node) &&
+        popupRef.current && !popupRef.current.contains(e.target as Node)
+      ) setActivePopup(null);
     };
     document.addEventListener('mousedown', handle);
     return () => document.removeEventListener('mousedown', handle);
   }, [activePopup]);
+
+  const handleChipClick = (type: 'grandma' | 'turtle') => {
+    if (activePopup !== type && rowRef.current) {
+      const r = rowRef.current.getBoundingClientRect();
+      setPopupPos({ top: r.bottom + 4, left: r.left, right: window.innerWidth - r.right });
+    }
+    setActivePopup(p => (p === type ? null : type));
+  };
 
   const currentEvents = getCurrentEvents(application);
   const futureEvents = getDailyEvents(application)
@@ -303,7 +335,7 @@ function MobileEventsRow() {
           <button
             key={type}
             type='button'
-            onClick={() => setActivePopup(p => (p === type ? null : type))}
+            onClick={() => handleChipClick(type)}
             className={`flex flex-1 flex-col rounded-lg px-3 py-1.5 text-left transition-all ${
               isActive
                 ? 'bg-green-500 bg-opacity-20 ring-1 ring-green-400 ring-opacity-50'
@@ -332,11 +364,15 @@ function MobileEventsRow() {
         );
       })}
 
-      {/* Full-width popup anchored below the chip row */}
-      {activePopup && (
-        <div className='absolute left-0 right-0 top-full z-30 mt-1'>
+      {/* Portal popup — renders into document.body, escapes header stacking context */}
+      {activePopup && popupPos && createPortal(
+        <div
+          ref={popupRef}
+          style={{ position: 'fixed', top: popupPos.top, left: popupPos.left, right: popupPos.right, zIndex: 9999 }}
+        >
           <MobileEventPopup type={activePopup} application={application} />
-        </div>
+        </div>,
+        document.body,
       )}
     </div>
   );
