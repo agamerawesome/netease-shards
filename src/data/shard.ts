@@ -216,7 +216,9 @@ export function getShardInfo(date: DateTime, override?: Override) {
     };
   }
 
-  const { realmIndex, map } = getNetEaseRealmRotation(today, isRed);
+  const { realmIndex, map } = override?.map != null
+    ? { realmIndex: override.realm ?? realms.indexOf(override.map.split('.')[0] as typeof realms[number]), map: override.map as Areas }
+    : getNetEaseRealmRotation(today, isRed);
   const rewardAC = isRed ? overrideRewardAC[map] ?? 3.5 : undefined;
   const numVarient = numMapVarients[map as keyof typeof numMapVarients] ?? 1;
 
