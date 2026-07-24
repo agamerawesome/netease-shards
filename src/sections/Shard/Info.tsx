@@ -57,13 +57,9 @@ export const ShardInfoSection = forwardRef<HTMLDivElement, ShardInfoSectionProps
     const overrideAuthor = remoteAuthorNames?.[overrideBy];
     const reason: string = overrideReason.startsWith('!!!')
       ? 'Reason: ' + overrideReason.slice(3)
-      : (() => {
-                      const key = `override:reason.${overrideReason}`;
-                      if (i18n.exists(key)) {
-                        return t(key as any);
-                      }
-                      return `Reason: ${overrideReason}`;
-                    })();
+      : overrideReason.includes(' ')
+              ? `Reason: ${overrideReason}`
+              : t(`override:reason.${overrideReason}` as any);
     return (
       <small className='text-[0.8em]'>
         <p className='flex flex-row flex-wrap items-center justify-center gap-1'>
