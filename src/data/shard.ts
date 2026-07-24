@@ -26,7 +26,7 @@ const shardSchedule: Record<number, (dayOfMonth: number) => ShardConfig> = {
   2: (day) => ({ hasShard: day <= 15, isRed: false, times: ['09:08', '14:08', '19:08'] }),
   3: (day) => ({ hasShard: day > 15, isRed: false, times: ['09:08', '15:08', '21:08'] }),
   4: (_day) => ({ hasShard: false, isRed: false, times: [] }),
-  5: (day) => ({ hasShard: day > 15, isRed: true, times: ['11:08', '14:08', '23:08'] }),
+  5: (day) => ({ hasShard: day > 15, isRed: true, times: ['11:08', '15:08', '23:08'] }),
   6: (day) => ({ hasShard: day <= 15, isRed: true, times: ['10:08', '14:08', '22:08'] }),
   7: (_day) => ({ hasShard: true, isRed: true, times: ['07:08', '13:08', '19:08'] }),
 };
@@ -156,19 +156,19 @@ const manualLocationOverrides: ManualOverride[] = [
 
 // Maps split by shard type — a map only ever hosts one type of shard.
 const blackMapsPerRealm: Record<string, Areas[]> = {
-  prairie:   ['prairie.butterfly', 'prairie.village'],
-  forest:    ['forest.brook', 'forest.boneyard'],
-  valley:    ['valley.rink'],
+  prairie: ['prairie.butterfly', 'prairie.village'],
+  forest: ['forest.brook', 'forest.boneyard'],
+  valley: ['valley.rink'],
   wasteland: ['wasteland.temple', 'wasteland.battlefield'],
-  vault:     ['vault.starlight'],
+  vault: ['vault.starlight'],
 };
 
 const redMapsPerRealm: Record<string, Areas[]> = {
-  prairie:   ['prairie.bird', 'prairie.island', 'prairie.cave'],
-  forest:    ['forest.end', 'forest.tree', 'forest.sunny'],
-  valley:    ['valley.dreams', 'valley.hermit'],
+  prairie: ['prairie.bird', 'prairie.island', 'prairie.cave'],
+  forest: ['forest.end', 'forest.tree', 'forest.sunny'],
+  valley: ['valley.dreams', 'valley.hermit'],
   wasteland: ['wasteland.graveyard', 'wasteland.crab', 'wasteland.ark'],
-  vault:     ['vault.jelly'],
+  vault: ['vault.jelly'],
 };
 
 function getNetEaseRealmRotation(date: DateTime, isRed: boolean): { realmIndex: number; map: Areas } {
