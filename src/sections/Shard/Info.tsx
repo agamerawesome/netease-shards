@@ -58,10 +58,12 @@ export const ShardInfoSection = forwardRef<HTMLDivElement, ShardInfoSectionProps
     const reason: string = overrideReason.startsWith('!!!')
       ? 'Reason: ' + overrideReason.slice(3)
       : (() => {
-          const key = `override:reason.${overrideReason}`;
-          const translated = t(key as any);
-          return translated !== key ? translated : `Reason: ${overrideReason}`;
-        })();
+                const fullKey = `override:reason.${overrideReason}`;
+                const bareKey = `reason.${overrideReason}`;
+                const translated = t(fullKey as any);
+                if (translated !== fullKey && translated !== bareKey) return translated;
+                return `Reason: ${overrideReason}`;
+              })();
     return (
       <small className='text-[0.8em]'>
         <p className='flex flex-row flex-wrap items-center justify-center gap-1'>
