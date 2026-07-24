@@ -26,7 +26,7 @@ const shardSchedule: Record<number, (dayOfMonth: number) => ShardConfig> = {
   2: (day) => ({ hasShard: day <= 15, isRed: false, times: ['09:08', '14:08', '19:08'] }),
   3: (day) => ({ hasShard: day > 15, isRed: false, times: ['09:08', '15:08', '21:08'] }),
   4: (_day) => ({ hasShard: false, isRed: false, times: [] }),
-  5: (day) => ({ hasShard: day > 15, isRed: true, times: ['11:08', '15:08', '23:08'] }),
+  5: (day) => ({ hasShard: day > 15, isRed: true, times: ['11:08', '17:08', '23:08'] }),
   6: (day) => ({ hasShard: day <= 15, isRed: true, times: ['10:08', '14:08', '22:08'] }),
   7: (_day) => ({ hasShard: true, isRed: true, times: ['07:08', '13:08', '19:08'] }),
 };
